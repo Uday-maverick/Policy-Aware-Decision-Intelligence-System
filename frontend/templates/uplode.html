@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload Document{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Upload Policy Document</h2>
+    <div class="tabs">
+        <button class="tab active" data-tab="file">File Upload</button>
+        <button class="tab" data-tab="url">URL</button>
+    </div>
+    
+    <div id="file-tab" class="tab-content active">
+        <input type="file" id="file-input" accept=".pdf">
+        <button onclick="uploadFile()">Upload</button>
+    </div>
+    
+    <div id="url-tab" class="tab-content">
+        <input type="text" id="url-input" placeholder="Enter document URL">
+        <button onclick="uploadURL()">Process URL</button>
+    </div>
+    
+    <div id="upload-status"></div>
+</div>
+
+{% block extra_js %}
+<script>
+    function uploadFile() {
+        const fileInput = document.getElementById('file-input');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select a file');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('source_type', 'file');
+        formData.append('source', file);
+        
+        uploadDocument(formData);
+    }
+
+    function uploadURL() {
+        const urlInput = document.getElementById('url-input');
+        const url = urlInput.value.trim();
+        if (!url) {
+            alert('Please enter a URL');
+            return;
+        }
+        
+        const data = {
+            source_type: 'url',
+            source: url
+        };
+        
+        uploadDocument(JSON.stringify(data));
+    }
+
+    function uploadDocument(data) {
+        const statusDiv = document.getElementById('upload-status');
+        statusDiv.textContent = 'Processing...';
+        
+        const isFormData = data instanceof FormData;
+        const url = '/api/ingest/';
+        
+        fetch(url, {
+            method: 'POST',
+            body: isFormData ? data : JSON.stringify(data),
+            headers: isFormData ? {
+                'X-CSRFToken': getCookie('csrftoken')
+            } : {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                statusDiv.textContent = `Success! Document ID: ${data.document_id}, Chunks: ${data.chunks}`;
+            } else {
+                statusDiv.textContent = `Error: ${data.error || 'Unknown error'}`;
+            }
+        })
+        .catch(error => {
+            statusDiv.textContent = 'Upload failed. Please try again.';
+            console.error('Error:', error);
+        });
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}
+{% endblock %}

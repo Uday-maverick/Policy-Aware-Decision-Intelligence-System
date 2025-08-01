@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyAI - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>PolicyAI</h1>
+        <p>Your AI assistant for insurance policy documents</p>
+    </header>
+    
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <p>© 2025 PolicyAI. All rights reserved.</p>
+    </footer>
+    
+    <script src="{% static 'main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

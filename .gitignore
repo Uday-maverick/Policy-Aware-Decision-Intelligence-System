@@ -1,0 +1,29 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Environment
+.env
+.venv
+venv
+env/
+
+# Frontend
+node_modules/
+npm-debug.log
+
+# Vector stores
+vector_store/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Build artifacts
+/dist/
+/build/

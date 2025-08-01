@@ -1,0 +1,10 @@
+Django
+psycopg2-binary
+sentence-transformers
+faiss-cpu
+langchain
+groq
+requests
+python-dotenv
+pymupdf
+django-htmx
