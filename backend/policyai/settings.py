@@ -66,7 +66,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '..', '..', 'frontend', 'static'),
+    os.path.join(BASE_DIR, '../../frontend/static'),
 ]
 
 # PolicyAI Settings
@@ -85,4 +85,22 @@ ENTITY_PATTERNS = {
     'policy_age': r'(\d+)\s*(month|day|year)s?\s*(?:old)?\s*policy',
     'gender': r'\b([MF]|male|female)\b',
     'age': r'(\d+)\s*(?:year|yr|yrs)?s?\s*(?:old)?'
+}
+
+## added
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.template': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
 }
